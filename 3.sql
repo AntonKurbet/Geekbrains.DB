@@ -43,14 +43,22 @@ DROP COLUMN `area_ru`,
 CHANGE COLUMN `city_id` `id` INT NOT NULL AUTO_INCREMENT ,
 CHANGE COLUMN `title_ru` `title` VARCHAR(150) NOT NULL ,
 ADD PRIMARY KEY (`id`),
-ADD INDEX `idx_title` (`title` ASC) VISIBLE;
+ADD INDEX `idx_cities_title` (`title` ASC) VISIBLE;
+;
+
+INSERT INTO geodata._countries (id,title) VALUES (9999,'');
+INSERT INTO geodata._regions (id,country_id,title) VALUES (9999999,9999,'');
+UPDATE geodata._cities SET region_id = 9999999 WHERE region_id IS NULL;
+
+ALTER TABLE `geodata`.`_cities` 
+CHANGE COLUMN `region_id` `region_id` INT NOT NULL ;
+
+ALTER TABLE `geodata`.`_cities` 
+ADD INDEX `fk_cities_countries_id_idx` (`country_id` ASC) VISIBLE;
 ;
 
 ALTER TABLE `geodata`.`_cities` 
-ADD INDEX `fk_cities_country_id_idx` (`country_id` ASC) VISIBLE;
-;
-ALTER TABLE `geodata`.`_cities` 
-ADD CONSTRAINT `fk_cities_country_id`
+ADD CONSTRAINT `fk_cities_countries_id`
   FOREIGN KEY (`country_id`)
   REFERENCES `geodata`.`_countries` (`id`)
   ON DELETE RESTRICT
@@ -66,6 +74,4 @@ ADD CONSTRAINT `fk_cities_regions_id`
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
 
-ALTER TABLE `geodata`.`_cities` 
-ADD INDEX `fk_cities_regions_id_idx` (`region_id` ASC) VISIBLE;
-;
+
