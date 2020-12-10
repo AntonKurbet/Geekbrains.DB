@@ -77,7 +77,7 @@ FROM
                AND de.to_date > CURDATE()
         JOIN
     salaries s ON s.emp_no = e.emp_no
-              AND s.from_date = de.from_date
+              AND s.to_date = de.to_date
         JOIN
     departments d ON d.dept_no = de.dept_no
 GROUP BY d.dept_no;
